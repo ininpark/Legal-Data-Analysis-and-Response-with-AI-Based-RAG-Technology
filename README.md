@@ -23,19 +23,26 @@
 ## 프로젝트 구조
     ```
     my_rag_project/
-    │
     ├── app/
     │   ├── __init__.py
     │   ├── main.py
     │   ├── model.py
-    │
+    │   └── utils.py
     ├── data/
-    │   ├── data.json
-    │   ├── data.xml
-    │
+    │   ├── raw/
+    │   │   ├── data.json
+    │   │   ├── data.xml
+    │   ├── processed/
+    │   │   ├── embeddings.json
+    │   │   ├── embeddings.csv
+    ├── scripts/
+    │   ├── data_processing.py
+    │   ├── data_update.py
+    ├── venv/
     ├── requirements.txt
     ├── run.py
     └── README.md
+
     ```
 
 ## 사용 기술 및 도구
