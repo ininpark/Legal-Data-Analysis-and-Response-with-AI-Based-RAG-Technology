@@ -21,7 +21,7 @@
 
 
 ## 프로젝트 구조
-    ```bash
+    ```
     my_rag_project/
     │
     ├── app/
