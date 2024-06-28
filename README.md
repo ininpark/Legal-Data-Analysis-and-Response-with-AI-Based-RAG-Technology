@@ -21,22 +21,22 @@
 
 
 ## 프로젝트 구조
-'''
-my_rag_project/
-│
-├── app/
-│   ├── __init__.py
-│   ├── main.py
-│   ├── model.py
-│
-├── data/
-│   ├── data.json
-│   ├── data.xml
-│
-├── requirements.txt
-├── run.py
-└── README.md
-'''
+    ```bash
+    my_rag_project/
+    │
+    ├── app/
+    │   ├── __init__.py
+    │   ├── main.py
+    │   ├── model.py
+    │
+    ├── data/
+    │   ├── data.json
+    │   ├── data.xml
+    │
+    ├── requirements.txt
+    ├── run.py
+    └── README.md
+    ```
 
 ## 사용 기술 및 도구
 - **프로그래밍 언어**: Python, Dart
