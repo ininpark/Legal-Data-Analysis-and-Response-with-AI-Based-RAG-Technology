@@ -19,6 +19,23 @@
 - **응답 시스템 개발**: Flutter 프레임워크를 사용하여 사용자 인터페이스를 설계하고, 언어 모델 API를 통합하여 실시간으로 응답을 제공하는 시스템을 개발합니다.
 - **성능 평가 및 개선**: 개발된 시스템의 성능을 평가하고, 필요시 개선 작업을 수행합니다.
 
+
+## 프로젝트 구조
+- ** my_rag_project/
+│
+├── app/
+│   ├── __init__.py
+│   ├── main.py
+│   ├── model.py
+│
+├── data/
+│   ├── data.json
+│   ├── data.xml
+│
+├── requirements.txt
+├── run.py
+└── README.md
+
 ## 사용 기술 및 도구
 - **프로그래밍 언어**: Python, Dart
 - **프레임워크**: Flask, Flutter
