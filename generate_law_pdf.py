@@ -1,3 +1,11 @@
+!pip install langchain
+!pip install sentence-transformers
+!pip install datasets
+!pip install chromadb
+!pip install -U langchain-community
+!pip install ipywidgets
+!pip install openai
+
 from datasets import load_dataset
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
