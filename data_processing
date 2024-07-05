@@ -1,0 +1,47 @@
+from datasets import load_dataset
+import json
+import re
+
+def convert_to_detailed_structure(item):
+    full_text = item['전문']
+    
+    # 【】 안의 내용을 키로 하고, 나머지 텍스트를 값으로 하는 딕셔너리 생성
+    pattern = r'【(.*?)】'
+    keys = re.findall(pattern, full_text)
+    values = re.split(pattern, full_text)[1:]
+    
+    section_dict = {}
+    for i in range(0, len(values), 2):
+        key = keys[i//2]
+        value = values[i+1].replace('\n', ' ').strip()
+        section_dict[key] = value
+
+    detailed_structure = {
+        "판례정보일련번호": item['판례정보일련번호'],
+        "사건명": item['사건명'],
+        "사건번호": item['사건번호'],
+        "선고일자": item['선고일자'],
+        "선고": item['선고'],
+        "법원명": item['법원명'],
+        "사건종류명": item['사건종류명'],
+        "판결유형": item['판결유형'],
+        "판시사항": item['판시사항'] if '판시사항' in item else '',
+        "판결요지": item['판결요지'] if '판결요지' in item else '',
+        "참조조문": item['참조조문'].split(',') if item.get('참조조문') else [],
+        "참조판례": item['참조판례'].split(',') if item.get('참조판례') else [],
+        "전문": section_dict  # 전체 본문 텍스트를 구간으로 나누어 추가
+    }
+
+    return detailed_structure
+
+# Hugging Face에서 데이터셋 불러오기
+dataset = load_dataset("joonhok-exo-ai/korean_law_open_data_precedents", download_mode="force_redownload")
+
+# 처음 100개의 항목만 변환
+sample_data = dataset['train'].select(range(100))  # 100개 선택
+sample_data_dicts = [dict(item) for item in sample_data]  # 각 항목을 dict로 변환
+detailed_data = [convert_to_detailed_structure(item) for item in sample_data_dicts]
+
+# 변환된 데이터를 확인하기 위해 로컬 JSON 파일로 저장
+with open("C:/Users/OWNER/inhye/Natural_language/인혜,민정_도전학기/data3(허깅페이스_한국판례데이터)/detailed_legal_cases_data_sample.json", "w", encoding="utf-8") as f:
+    json.dump(detailed_data, f, ensure_ascii=False, indent=4)
