@@ -70,9 +70,9 @@ def create_pdf(case_data, font_path, output_dir):
     return pdf_file
 
 # 폰트 파일 경로 설정
-font_path = "C:\\Users\\OWNER\\inhye\\Natural_language\\인혜,민정_도전학기\\Noto_Sans_KR\\NotoSansKR-VariableFont_wght.ttf"
+font_path = "D:\\도전학기\\Noto_Sans_KR\\NotoSansKR-VariableFont_wght.ttf"
 # 저장 디렉토리 설정
-output_dir = "D:\\pdfs"
+output_dir = "D:\\도전학기\\generate_law_pdf"
 
 # 저장 디렉토리 존재 확인 및 생성
 os.makedirs(output_dir, exist_ok=True)
