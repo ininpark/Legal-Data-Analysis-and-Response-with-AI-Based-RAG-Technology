@@ -1,10 +1,9 @@
 from datasets import load_dataset
 from reportlab.lib.pagesizes import A4
-from reportlab.pdfgen import canvas
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase import pdfmetrics
-from reportlab.lib.units import mm
-from textwrap import wrap
 import re
 
 # Hugging Face에서 데이터셋 불러오기
@@ -31,55 +30,45 @@ def create_pdf(case_data, font_path):
     # PDF 파일 이름
     pdf_file = f"{case_data['판례정보일련번호']}.pdf"
     
-    # PDF 캔버스 생성
-    c = canvas.Canvas(pdf_file, pagesize=A4)
-    width, height = A4
+    # PDF 문서 설정
+    doc = SimpleDocTemplate(pdf_file, pagesize=A4, rightMargin=20, leftMargin=20, topMargin=20, bottomMargin=20)
+    styles = getSampleStyleSheet()
     
     # 한글 폰트 설정
-    pdfmetrics.registerFont(TTFont('NanumGothic', font_path))
-    c.setFont("NanumGothic", 12)
-    
-    # 초기 텍스트 위치
-    text_y_position = height - 40
-    margin = 20
-    line_height = 15
+    pdfmetrics.registerFont(TTFont('NotoSansKR', font_path))
+    normal_style = ParagraphStyle(name='Normal', fontName='NotoSansKR', fontSize=10)
+    heading_style = ParagraphStyle(name='Heading1', fontName='NotoSansKR', fontSize=10, spaceAfter=6)
 
-    def draw_string(text, font_size=12):
-        nonlocal text_y_position
-        c.setFont("NanumGothic", font_size)
-        wrapped_text = wrap(text, width=95)  # 텍스트를 적절한 길이로 줄바꿈
-        for line in wrapped_text:
-            if text_y_position < margin + line_height:  # 새로운 페이지 생성 조건
-                c.showPage()
-                c.setFont("NanumGothic", font_size)
-                text_y_position = height - margin
-            c.drawString(margin, text_y_position, line)
-            text_y_position -= line_height
+    elements = []
 
-    # PDF 내용 작성
-    draw_string(f"Case ID: {case_data['판례정보일련번호']}", 16)
-    
+    # Case ID 추가
+    elements.append(Paragraph(f"Case ID: {case_data['판례정보일련번호']}", heading_style))
+    elements.append(Spacer(1, 12))
+
+    # 나머지 데이터 추가
     for key, value in case_data.items():
         if key == "참조판례":  # 참조판례는 제외
             continue
         if key == "전문":  # 전문 내용을 상세 구분으로 나누기
             detailed_sections = convert_to_detailed_structure(value)
             for section, text in detailed_sections.items():
-                draw_string(f"{section}: {text}", 12)
+                elements.append(Paragraph(f"{section}:", heading_style))
+                elements.append(Paragraph(text, normal_style))
+                elements.append(Spacer(1, 12))
         else:
             if isinstance(value, list):  # 리스트 타입 처리
                 value = ', '.join(value)
             elif isinstance(value, dict):  # 딕셔너리 타입 처리
-                value = '\n'.join([f"{k}: {v}" for k, v in value.items()])
-            
-            draw_string(f"{key}: {value}")
-    
+                value = '<br/>'.join([f"{k}: {v}" for k, v in value.items()])
+            elements.append(Paragraph(f"{key}: {value}", normal_style))
+            elements.append(Spacer(1, 12))
+
     # PDF 저장
-    c.save()
+    doc.build(elements)
     return pdf_file
 
 # 폰트 파일 경로 설정
-font_path = "C:\\Users\\OWNER\\inhye\\Natural_language\\인혜,민정_도전학기\\Noto_Sans_KR\\NotoSansKR-VariableFont_wght.ttf" # 다운로드한 NanumGothic.ttf 파일의 경로
+font_path = "C:\\Users\\OWNER\\inhye\\Natural_language\\인혜,민정_도전학기\\Noto_Sans_KR\\NotoSansKR-VariableFont_wght.ttf"
 
 # 각 판례 데이터를 PDF로 변환
 for case in sample_data:
